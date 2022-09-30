@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+        <v-card  class="mx-auto overflow-hidden"  flat >
+            <template><component is="test"  > </component></template>
+          
+        </v-card>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    Vue.component('test',{
+        data() {
+            return {
+                json:[{
+                    id:1,
+                    FirstName: 'Mikheil',
+                    LastName: 'Nadiradze',
+                    Address:'Chavchavadze str.1 ,Tbilisi,Georgia',
+                    date:'1985-02-22',
+                    Gender: 'male',
+                    notes:'some text',
+                    },
+                    {
+                    id:2,
+                    FirstName: 'Mikheil',
+                    LastName: 'Nadiradze',
+                    Address:'Chavchavadze str.2 ,Tbilisi,Georgia',
+                    date:'1985-02-22',
+                    Gender: 'male',
+                    notes:'some text',
+                    },
+                    {
+                    id:3,
+                    FirstName: 'Mikheil',
+                    LastName: 'Nadiradze',
+                    Address:'Chavchavadze str.3 ,Tbilisi,Georgia',
+                    date:'1985-02-22',
+                    Gender: 'male',
+                    notes:'some text',
+                    },
+                    ],
+                    ai:3,
+                    rule: [
+                        value => !!value || 'Required.',
+                        value => (value && value.length >= 3) || 'Min 3 characters',
+                    ],
+                    rule2: [
+                        value => (value && value.length <= 35) || 'Max 35 characters',
+                    ],
+                    FirstName:'',
+                    LastName:'',
+                    Address:'',
+                    date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+                    menu: false,
+                    Gender:'',
+                    notes:'',
+
+                    snackbar: false,
+                    snacktext: 'Fill all required fields',
+                    timeout: 2000,
+
+                    dialog: false,
+                    dialogtxt:'',
+
+                }
+        },
+        template:`
+        <div>
+                <v-card
+                    class="mx-auto"
+                    max-width="450"
+                    outlined
+                >
+                    <v-card-text>
+                    <div>+</div>
+                    <v-spacer></v-spacer>
+                    <v-text-field label="First Name" :rules="rule" v-model="FirstName" hide-details="auto"></v-text-field>
+                    <v-text-field label="Last Name" :rules="rule" v-model="LastName" hide-details="auto"></v-text-field>
+                    <v-text-field label="Address" :rules="rule2" v-model="Address" hide-details="auto"></v-text-field>
+                    <v-menu
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                >
+                    <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        v-model="date"
+                        label="Picker without buttons"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                    ></v-text-field>
+                    </template>
+                    <v-date-picker
+                    v-model="date"
+                    @input="menu = false"
+                    ></v-date-picker>
+                    </v-menu>
+                    <v-select
+                    v-model="Gender"
+                    :items="['male','female']"
+                    label="Gender"
+                    ></v-select>
+                    <v-text-field
+                        v-model="notes"
+                        label="Notes"
+                    ></v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                    <v-btn
+                        text
+                        outlined
+                        color="primary"
+                        @click="additem()"
+                    >
+                        Insert
+                    </v-btn>
+                    </v-card-actions>
+                    </v-card>
+                    <template>
+                        <v-simple-table>
+                            <template v-slot:default>
+                            <thead>
+                                <tr>
+                                <th class="text-left">
+                                    #
+                                </th>
+                                <th class="text-left">
+                                    FirstName
+                                </th>
+                                <th class="text-left">
+                                    LastName
+                                </th>
+                                <th class="text-left">
+                                    Address
+                                </th>
+                                <th class="text-left">
+                                    Birth Date
+                                </th>
+                                <th class="text-left">
+                                    Gender
+                                </th>
+                                <th class="text-left">
+                                    
+                                </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr 
+                                v-for="(item, i) in json"
+                                :key="i"
+                                >
+                                <td>{{ item.id }}</td>
+                                <td @click = "dnotes(i)" >{{ item.FirstName }}</td>
+                                <td>{{ item.LastName }}</td>
+                                <td>{{ item.Address }}</td>
+                                <td>{{ item.date }}</td>
+                                <td>{{ item.Gender }}</td>
+                                <td>
+                                    <v-btn
+                                    icon
+                                    color="pink"
+                                    @click="delitem(i)"
+                                    >
+                                    <v-icon>mdi-delete</v-icon>
+                                    </v-btn>
+                                </td>
+                                </tr>
+                            </tbody>
+                            </template>
+                        </v-simple-table>
+                        </template>
+                         
+                        <v-snackbar
+                        v-model="snackbar"
+                        :timeout="timeout"
+                        >
+                        {{ snacktext }}
+
+                        <template v-slot:action="{ attrs }">
+                            <v-btn
+                            color="blue"
+                            text
+                            v-bind="attrs"
+                            @click="snackbar = false"
+                            >
+                            Close
+                            </v-btn>
+                        </template>
+                        </v-snackbar>
+
+                        <template>
+                            <v-dialog
+                                v-model="dialog"
+                                width="300px"
+                                >
+                                <v-card>
+                                    <v-card-title>
+                                    <span class="text-h5">Notes</span>
+                                    </v-card-title>
+                                    <v-card-text>{{ dialogtxt }}
+                                    </v-card-text>
+                                    <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        color="green darken-1"
+                                        text
+                                        @click="dialog = false"
+                                    >
+                                        close
+                                    </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                                </v-dialog>
+                            
+                            </template>   
+                </div>
+        `,
+        methods: {
+            lstorage() {
+                localStorage.setItem('data', JSON.stringify(this.json));
+                localStorage.setItem('ai', this.ai);
+            },
+            additem() {
+                if(this.FirstName.length>2 && this.LastName.length>2 && this.LastName.length<36){
+                    this.ai++;
+                    this.json.push({
+                        id:this.ai,
+                        FirstName:this.FirstName,
+                        LastName:this.LastName,
+                        Address:this.Address,
+                        date:this.date,
+                        Gender:this.Gender,
+                        notes:this.notes
+                    })
+                    this.json.sort((a,b)=>b.id-a.id);
+                    [this.FirstName,this.LastName,this.Address,this.date,this.Gender,this.notes] = '';
+                    this.snacktext = "Data  inserted successfully";
+                    this.snackbar = true ; 
+
+
+                }else{
+                    this.snacktext = "Fill data correctly";
+                    this.snackbar = true ; 
+                }
+              
+            },
+            dnotes(i){
+                this.dialogtxt = this.json[i].notes;
+                this.dialog = true;
+
+            },
+            delitem(id){
+                this.json.splice(id, 1);
+                localStorage.setItem('data', this.json);
+            }
+
+        },
+        watch: {
+
+            json(){
+                
+                console.log(this.json);
+                this.lstorage();
+            }
+        },
+        mounted() {
+            console.log( localStorage.getItem('data') && localStorage.getItem('ai'));
+            if(localStorage.getItem('data') && JSON.parse(localStorage.getItem('data')).length>0 )  {
+                this.json = JSON.parse(localStorage.getItem('data'));
+                this.ai = localStorage.getItem('ai');
+            }
+            this.json.sort((a,b)=>b.id-a.id);
+        }
+
+
+    })
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+    })
+  </script>
+</body>
+</html>
