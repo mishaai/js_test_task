@@ -54,6 +54,7 @@
                     rule: [
                         value => !!value || 'Required.',
                         value => (value && value.length >= 3) || 'Min 3 characters',
+                        value => /^[a-zA-Z]+(?:[-'\\s][a-zA-Z]+)*$/.test(value) || 'Must contain only letters',
                     ],
                     rule2: [
                         value => (value && value.length <= 35) || 'Max 35 characters',
@@ -236,8 +237,16 @@
                 localStorage.setItem('data', JSON.stringify(this.json));
                 localStorage.setItem('ai', this.ai);
             },
+            validate_name(a){
+                    let patern =new RegExp("^[a-zA-Z]+(?:[-'\\s][a-zA-Z]+)*$");
+                    return  patern.test(a) && a.length >2 ? true:false;
+            },
+            validate_address(a){
+                    return a == 'undefined' || a.length < 36  ? true:false;
+            },
             additem() {
-                if(this.FirstName.length>2 && this.LastName.length>2 && this.LastName.length<36){
+                
+                if(this.validate_name(this.FirstName) && this.validate_name(this.LastName) && this.validate_address(this.Address)){
                     this.ai++;
                     this.json.push({
                         id:this.ai,
