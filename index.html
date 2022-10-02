@@ -58,6 +58,8 @@
                     ],
                     rule2: [
                         value => (value && value.length <= 35) || 'Max 35 characters',
+                        //value => /^[\w.\d\s-]+$/.test(value) || 'Must contain only letters,numbers,dots and spaces',
+                        value => /^[a-zA-Z0-9-.\s]*$/.test(value) || 'Must contain only letters,numbers,dots and spaces',
                     ],
                     FirstName:'',
                     LastName:'',
@@ -238,11 +240,13 @@
                 localStorage.setItem('ai', this.ai);
             },
             validate_name(a){
-                    let patern =new RegExp("^[a-zA-Z]+(?:[-'\\s][a-zA-Z]+)*$");
-                    return  patern.test(a) && a.length >2 ? true:false;
+                let patern =new RegExp("^[a-zA-Z]+(?:[-'\\s][a-zA-Z]+)*$"); // only leters
+                return  patern.test(a) && a.length >2 ? true:false;
             },
             validate_address(a){
-                    return a == 'undefined' || a.length < 36  ? true:false;
+                let patern =new RegExp("^[a-zA-Z0-9-.\s]+(?:[-'\\s][a-zA-Z0-9-.\s]+)*$"); // leters,numbers,dots,spaces
+                console.log(patern.test(a),10)
+                return a.length < 36 && patern.test(a) ? true:false;
             },
             additem() {
                 
